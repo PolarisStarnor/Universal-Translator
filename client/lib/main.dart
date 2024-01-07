@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'recorder.dart';
 
 void main() {
   runApp(const MyApp());
@@ -115,20 +116,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  bool recording = false;
+  var recorder = Recorder();
 
-  void _incrementCounter() {
+  void toggleRecording() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+      recording = !recording;
     });
-  }
 
-bool RECORDING = false;
+    if (recording) {
+      //Start recording stuff
+      recorder.start();
+    } else {
+      final path = recorder.end();
+
+      // TODO: Return the translated output on finish.
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +204,7 @@ bool RECORDING = false;
                   }).toList(),
             ),
 
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             DropdownMenu<Languages>(
               initialSelection: Languages.english,
@@ -224,15 +233,12 @@ bool RECORDING = false;
             SizedBox(height: 20),
 
             IconButton(
-              isSelected: RECORDING,
+              isSelected: recording,
               iconSize: 56,
               icon: const Icon(Icons.fiber_manual_record_outlined),
               selectedIcon: const Icon(Icons.stop_circle_outlined),
               onPressed: () {
-                print(RECORDING);
-                setState(() {
-                  RECORDING = !RECORDING;
-                });
+                toggleRecording();
               },
             ),
 
