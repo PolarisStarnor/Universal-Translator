@@ -4,6 +4,66 @@ void main() {
   runApp(const MyApp());
 }
 
+enum Languages {
+  english("English", "en"),
+  french("French", "fr"),
+  arabic("Arabic", "ar"),
+  czech("Czech", "cs"),
+  german("German", "de"),
+  spanish("Spanish", "es"),
+  estonian("Estonian", "et"),
+  finnish("Finnish", "fi"),
+  gujarati("Gujarati", "gu"),
+  hindi("Hindi", "hi"),
+  italian("Italian", "it"),
+  japanese("Japanese", "ja"),
+  kazakh("Kazakh", "kk"),
+  korean("Korean", "ko"),
+  lithuanian("Lithuanian", "lt"),
+  latvian("Latvian", "lv"),
+  burmese("Burmese", "my"),
+  nepali("Nepali", "ne"),
+  dutch("Dutch", "nl"),
+  romanian("Romanian", "ro"),
+  russian("Russian", "ru"),
+  sinhala("Sinhala", "si"),
+  turkish("Turkish", "tr"),
+  vietnamese("Vietnamese", "vi"),
+  chinese("Chinese", "zh"),
+  afrikaans("Afrikaans", "af"),
+  azerbaijani("Azerbaijani", "az"),
+  bengali("Bengali", "bn"),
+  persian("Persian", "fa"),
+  hebrew("Hebrew", "he"),
+  croatian("Croatian", "hr"),
+  indonesian("Indonesian", "id"),
+  georgian("Georgian", "ka"),
+  khmer("Khmer", "km"),
+  macedonian("Macedonian", "mk"),
+  malayalam("Malayalam", "ml"),
+  mongolian("Mongolian", "mn"),
+  marathi("Marathi", "mr"),
+  polish("Polish", "pl"),
+  pashto("Pashto", "ps"),
+  portuguese("Portuguese", "pt"),
+  swedish("Swedish", "sv"),
+  swahili("Swahili", "sw"),
+  tamil("Tamil", "ta"),
+  telugu("Telugu", "te"),
+  thai("Thai", "th"),
+  tagalog("Tagalog", "tl"),
+  ukrainian("Ukrainian", "uk"),
+  urdu("Urdu", "ur"),
+  xhosa("Xhosa", "xh"),
+  galician("Galician", "gl"),
+  slovene("Slovene", "sl");
+
+  const Languages(this.label, this.val);
+  final String label;
+  final String val;
+
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -11,7 +71,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Universal Translator',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -28,10 +88,10 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Universal Translator'),
     );
   }
 }
@@ -68,6 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+bool RECORDING = false;
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -76,6 +138,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    Languages? selectedLang;
+    final TextEditingController languageController = TextEditingController();
+    Icon recordIcon = const Icon(Icons.fiber_manual_record_outlined);
+
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -105,20 +171,74 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            DropdownMenu<Languages>(
+              initialSelection: Languages.english,
+              controller: languageController,
+              // requestFocusOnTap is enabled/disabled by platforms when it is null.
+              // On mobile platforms, this is false by default. Setting this to true will
+              // trigger focus request on the text field and virtual keyboard will appear
+              // afterward. On desktop platforms however, this defaults to true.
+              requestFocusOnTap: true,
+              label: const Text('Input Language'),
+              onSelected: (Languages? lang) {
+                setState(() {
+                  selectedLang = lang;
+                });
+              },
+              dropdownMenuEntries: Languages.values
+                  .map<DropdownMenuEntry<Languages>>(
+                      (Languages lang) {
+                    return DropdownMenuEntry<Languages>(
+                      label: lang.label,
+                      value: lang,
+                    );
+                  }).toList(),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+
+            SizedBox(height: 30),
+
+            DropdownMenu<Languages>(
+              initialSelection: Languages.english,
+              controller: languageController,
+              // requestFocusOnTap is enabled/disabled by platforms when it is null.
+              // On mobile platforms, this is false by default. Setting this to true will
+              // trigger focus request on the text field and virtual keyboard will appear
+              // afterward. On desktop platforms however, this defaults to true.
+              requestFocusOnTap: true,
+              label: const Text('Output Language'),
+              onSelected: (Languages? lang) {
+                setState(() {
+                  selectedLang = lang;
+                });
+              },
+              dropdownMenuEntries: Languages.values
+                  .map<DropdownMenuEntry<Languages>>(
+                      (Languages lang) {
+                    return DropdownMenuEntry<Languages>(
+                      label: lang.label,
+                      value: lang,
+                    );
+                  }).toList(),
             ),
+
+            SizedBox(height: 20),
+
+            IconButton(
+              isSelected: RECORDING,
+              iconSize: 56,
+              icon: const Icon(Icons.fiber_manual_record_outlined),
+              selectedIcon: const Icon(Icons.stop_circle_outlined),
+              onPressed: () {
+                print(RECORDING);
+                setState(() {
+                  RECORDING = !RECORDING;
+                });
+              },
+            ),
+
+
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
