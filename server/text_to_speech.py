@@ -13,7 +13,8 @@ def google_tts(input_text, language):
     @param language: IETF tag of the language for input_text
     """
     myobj = gTTS(text=input_text, lang=language, slow=False)
-    myobj.save(TTS_OUTPUT) 
+    myobj.save(TTS_OUTPUT)
+    playsound(TTS_OUTPUT)
 
 def upload_tts(client_ip):
     dest = posixpath.join(client_ip, 'universal_translator', 'cache', "TTS.mp3")

@@ -5,8 +5,8 @@ import librosa
 from transformers import Speech2TextProcessor, Speech2TextForConditionalGeneration
 
 
-MODEL = Speech2TextForConditionalGeneration.from_pretrained("facebook/s2t-small-librispeech-asr")
-PROCESSOR = Speech2TextProcessor.from_pretrained("facebook/s2t-small-librispeech-asr")
+MODEL = Speech2TextForConditionalGeneration.from_pretrained("facebook/s2t-large-librispeech-asr")
+PROCESSOR = Speech2TextProcessor.from_pretrained("facebook/s2t-large-librispeech-asr")
 
 def transcribe(speech : pathlib.Path) -> str:
     """

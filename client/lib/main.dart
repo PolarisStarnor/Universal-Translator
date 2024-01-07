@@ -1,72 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:universal_translator/send.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'recorder.dart';
-import 'package:path_provider/path_provider.dart';
+import 'languages.dart';
+import 'player.dart';
 
 void main() {
   runApp(const MyApp());
-}
-
-enum Languages {
-  english("English", "en"),
-  french("French", "fr"),
-  arabic("Arabic", "ar"),
-  czech("Czech", "cs"),
-  german("German", "de"),
-  spanish("Spanish", "es"),
-  estonian("Estonian", "et"),
-  finnish("Finnish", "fi"),
-  gujarati("Gujarati", "gu"),
-  hindi("Hindi", "hi"),
-  italian("Italian", "it"),
-  japanese("Japanese", "ja"),
-  kazakh("Kazakh", "kk"),
-  korean("Korean", "ko"),
-  lithuanian("Lithuanian", "lt"),
-  latvian("Latvian", "lv"),
-  burmese("Burmese", "my"),
-  nepali("Nepali", "ne"),
-  dutch("Dutch", "nl"),
-  romanian("Romanian", "ro"),
-  russian("Russian", "ru"),
-  sinhala("Sinhala", "si"),
-  turkish("Turkish", "tr"),
-  vietnamese("Vietnamese", "vi"),
-  chinese("Chinese", "zh"),
-  afrikaans("Afrikaans", "af"),
-  azerbaijani("Azerbaijani", "az"),
-  bengali("Bengali", "bn"),
-  persian("Persian", "fa"),
-  hebrew("Hebrew", "he"),
-  croatian("Croatian", "hr"),
-  indonesian("Indonesian", "id"),
-  georgian("Georgian", "ka"),
-  khmer("Khmer", "km"),
-  macedonian("Macedonian", "mk"),
-  malayalam("Malayalam", "ml"),
-  mongolian("Mongolian", "mn"),
-  marathi("Marathi", "mr"),
-  polish("Polish", "pl"),
-  pashto("Pashto", "ps"),
-  portuguese("Portuguese", "pt"),
-  swedish("Swedish", "sv"),
-  swahili("Swahili", "sw"),
-  tamil("Tamil", "ta"),
-  telugu("Telugu", "te"),
-  thai("Thai", "th"),
-  tagalog("Tagalog", "tl"),
-  ukrainian("Ukrainian", "uk"),
-  urdu("Urdu", "ur"),
-  xhosa("Xhosa", "xh"),
-  galician("Galician", "gl"),
-  slovene("Slovene", "sl");
-
-  const Languages(this.label, this.val);
-  final String label;
-  final String val;
-
 }
 
 class MyApp extends StatelessWidget {
@@ -122,6 +64,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool recording = false;
   var recorder = Recorder();
+  Languages? inputLang = Languages.english;
+  Languages? outputLang = Languages.english;
 
   Future<void> toggleRecording() async {
     setState(() {
@@ -138,8 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
       recorder.start();
     } else {
       var path = await recorder.end();
-      final mp3 = await wavToMp3(path);
-      send(mp3);
+      // final mp3 = await wavToMp3(path);
+      String translation = await send("$path");
+      textToSpeech(translation, outputLang!.val);
     }
   }
 
@@ -148,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final directory = await getApplicationCacheDirectory();
     final dir_path = directory.path;
 
-    String cmd = "-i \"$path\" -vn -ar 16000 -ac 2 -b:a 32k \"$dir_path/input.mp3\"";
+    String cmd = "-i $path -vn -ar 16000 -ac 2 -b:a 32k $dir_path/input.mp3";
     FFmpegKit.execute(cmd);
     print(cmd);
 
@@ -164,8 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    Languages? selectedLang;
-    final TextEditingController languageController = TextEditingController();
+    final TextEditingController inputLanguageController = TextEditingController();
+    final TextEditingController outputLanguageController = TextEditingController();
     Icon recordIcon = const Icon(Icons.fiber_manual_record_outlined);
 
     return Scaffold(
@@ -199,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             DropdownMenu<Languages>(
               initialSelection: Languages.english,
-              controller: languageController,
+              controller: inputLanguageController,
               // requestFocusOnTap is enabled/disabled by platforms when it is null.
               // On mobile platforms, this is false by default. Setting this to true will
               // trigger focus request on the text field and virtual keyboard will appear
@@ -208,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
               label: const Text('Input Language'),
               onSelected: (Languages? lang) {
                 setState(() {
-                  selectedLang = lang;
+                  inputLang = lang;
                 });
               },
               dropdownMenuEntries: Languages.values
@@ -225,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             DropdownMenu<Languages>(
               initialSelection: Languages.english,
-              controller: languageController,
+              controller: outputLanguageController,
               // requestFocusOnTap is enabled/disabled by platforms when it is null.
               // On mobile platforms, this is false by default. Setting this to true will
               // trigger focus request on the text field and virtual keyboard will appear
@@ -234,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
               label: const Text('Output Language'),
               onSelected: (Languages? lang) {
                 setState(() {
-                  selectedLang = lang;
+                  outputLang = lang;
                 });
               },
               dropdownMenuEntries: Languages.values
