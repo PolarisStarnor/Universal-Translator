@@ -39,6 +39,9 @@ dependencies:
   permission_handler: ^11.1.0
   path_provider: ^2.1.1
   ffmpeg_kit_flutter: ^6.0.3
+  audioplayers: ^5.2.1
+  flutter_tts: ^3.8.5
+  google_speech: ^4.3.0
 
 dev_dependencies:
   flutter_test:

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:universal_translator/send.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'recorder.dart';
-import 'package:path_provider/path_provider.dart';
 import 'languages.dart';
+import 'player.dart';
 
 void main() {
   runApp(const MyApp());
@@ -63,6 +64,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool recording = false;
   var recorder = Recorder();
+  Languages? inputLang = Languages.english;
+  Languages? outputLang = Languages.english;
 
   Future<void> toggleRecording() async {
     setState(() {
@@ -79,8 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
       recorder.start();
     } else {
       var path = await recorder.end();
-      final mp3 = await wavToMp3(path);
-      send(mp3);
+      // final mp3 = await wavToMp3(path);
+      send("$path");
+      textToSpeech("Hello World!", outputLang!.val);
     }
   }
 
@@ -89,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final directory = await getApplicationCacheDirectory();
     final dir_path = directory.path;
 
-    String cmd = "-i \"$path\" -vn -ar 16000 -ac 2 -b:a 32k \"$dir_path/input.mp3\"";
+    String cmd = "-i $path -vn -ar 16000 -ac 2 -b:a 32k -o $dir_path/input.mp3";
     FFmpegKit.execute(cmd);
     print(cmd);
 
@@ -105,8 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    Languages? inputLang;
-    Languages? outputLang;
     final TextEditingController inputLanguageController = TextEditingController();
     final TextEditingController outputLanguageController = TextEditingController();
     Icon recordIcon = const Icon(Icons.fiber_manual_record_outlined);

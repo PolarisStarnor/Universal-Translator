@@ -10,6 +10,7 @@ void send(String path) async {
 
   Socket.connect("24.65.114.193", 14000).then((socket) async {
     await socket.addStream(bytes);
+
     socket.destroy();
   });
 }
