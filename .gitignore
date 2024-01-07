@@ -34,3 +34,8 @@ google-services.json
 
 # Python extra files
 server/venv
+server/__pycache__
+server/tests/__pycache__
+
+#env files
+*.env
