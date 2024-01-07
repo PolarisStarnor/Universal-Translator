@@ -50,7 +50,7 @@ def connect(conn):
         p = re.compile('After:*?\n')
         correct_text = p.match(''.join(text))
 
-        print(text)
+        print(correct_text)
 
         conn.close()
 
