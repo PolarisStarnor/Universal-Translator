@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+import 'package:universal_translator/send.dart';
 
 import 'recorder.dart';
 import 'package:path_provider/path_provider.dart';
@@ -138,8 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       var path = await recorder.end();
       final mp3 = await wavToMp3(path);
-      print(mp3);
-      // TODO: Return the translated output on finish.
+      send(mp3);
     }
   }
 
