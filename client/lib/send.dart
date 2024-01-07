@@ -1,8 +1,8 @@
 import 'dart:io';
 // import 'dart:typed_data';
 
-void main() async {
-  File file = File("test_audio/test.mp3");
+void send(String path) async {
+  File file = File(path);
   var bytes = file.openRead();
 
   // File file2 = File("test_audio/test_write.mp3");
