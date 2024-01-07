@@ -38,23 +38,31 @@ def connect(conn):
                 if not data: break
                 mp3.write(data)
 
+        p = re.compile('After:.*?\n')
+
         filepath = pathlib.Path(filename)
         text = speech_to_text.transcribe(filepath)
         print(text)
-
-        text = text_cleanup.eliminate_repetitions(text)
-        print(text)
-        text = text_cleanup.clean(text)
-        print(text)
-        # text = text_cleanup.rephrase(text)
-
         cleanup(filepath)
 
-        p = re.compile('After:*?\n')
-        correct_text = p.match(''.join(text))
+        try:
+            text = p.findall(text_cleanup.eliminate_repetitions(text))[0][7:]
+        except IndexError:
+            continue
+        print(text)
+        text = translation.translate(text, 'en', 'de')
+        print(text)
+        # text = text_cleanup.clean(text)
+        # print(text)
+        # text = text_cleanup.rephrase(text)
+        # print(text)
 
-        print(''.join(text))
-        print(correct_text)
+        # print(''.join(text))
+        print("--------- Final Output ---------")
+        print(text)
+        print("--------- ------------ ---------")
+
+        conn.send(bytes(text))
 
         conn.close()
 
