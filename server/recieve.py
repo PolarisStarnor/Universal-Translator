@@ -48,7 +48,7 @@ def connect(conn):
         cleanup(filepath)
 
         p = re.compile('After:*?\n')
-        correct_text = p.match(text)
+        correct_text = p.match(''.join(text))
 
         print(text)
 
