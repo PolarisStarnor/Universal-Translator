@@ -83,8 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       var path = await recorder.end();
       // final mp3 = await wavToMp3(path);
-      send("$path");
-      textToSpeech("Hello World!", outputLang!.val);
+      String translation = await send("$path");
+      textToSpeech(translation, outputLang!.val);
     }
   }
 
@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final directory = await getApplicationCacheDirectory();
     final dir_path = directory.path;
 
-    String cmd = "-i $path -vn -ar 16000 -ac 2 -b:a 32k -o $dir_path/input.mp3";
+    String cmd = "-i $path -vn -ar 16000 -ac 2 -b:a 32k $dir_path/input.mp3";
     FFmpegKit.execute(cmd);
     print(cmd);
 

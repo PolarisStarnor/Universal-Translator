@@ -3,8 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-Future<String> send() async {
-  File file = File("test_audio/stuff_to_do.mp3");
+Future<String> send(String path) async {
+  File file = File(path);
   var bytes = file.openRead();
 
   // File file2 = File("test_audio/test_write.mp3");
