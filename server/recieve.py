@@ -8,7 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 # import text_to_speech
 
 def server_program():
-    host = "localhost"
+    host = ""
     port = 14000
 
     server_socket = socket.socket()
@@ -26,7 +26,6 @@ def server_program():
         conn.close()
         exit()
 
-    conn.close()
 
 def connect(conn):
     while True:
@@ -48,6 +47,8 @@ def connect(conn):
         cleanup(filepath)
 
         print(text)
+
+        conn.close()
 
         # conn.send(text.encode())
 
