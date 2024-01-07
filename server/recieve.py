@@ -4,6 +4,7 @@ import text_cleanup
 import translation
 import pathlib
 import asyncio
+import re
 from concurrent.futures import ThreadPoolExecutor
 # import text_to_speech
 
@@ -45,6 +46,9 @@ def connect(conn):
         # text = text_cleanup.rephrase(text)
 
         cleanup(filepath)
+
+        p = re.compile('After:*?\n')
+        correct_text = p.match(text)
 
         print(text)
 
