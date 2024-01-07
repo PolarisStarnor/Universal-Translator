@@ -128,6 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+bool RECORDING = false;
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -138,6 +140,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     Languages? selectedLang;
     final TextEditingController languageController = TextEditingController();
+    Icon recordIcon = const Icon(Icons.fiber_manual_record_outlined);
+
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -220,9 +224,15 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 20),
 
             IconButton(
-              icon: const Icon(Icons.play_circle_outline),
+              isSelected: RECORDING,
+              iconSize: 56,
+              icon: const Icon(Icons.fiber_manual_record_outlined),
+              selectedIcon: const Icon(Icons.stop_circle_outlined),
               onPressed: () {
-                print('button pressed!');
+                print(RECORDING);
+                setState(() {
+                  RECORDING = !RECORDING;
+                });
               },
             ),
 
