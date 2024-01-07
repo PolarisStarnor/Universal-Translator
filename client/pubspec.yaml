@@ -38,6 +38,7 @@ dependencies:
   record: ^5.0.4
   permission_handler: ^11.1.0
   path_provider: ^2.1.1
+  ffmpeg_kit_flutter: ^6.0.3
 
 dev_dependencies:
   flutter_test:

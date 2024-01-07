@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+
 import 'recorder.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -119,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool recording = false;
   var recorder = Recorder();
 
-  void toggleRecording() {
+  Future<void> toggleRecording() async {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -133,10 +136,24 @@ class _MyHomePageState extends State<MyHomePage> {
       //Start recording stuff
       recorder.start();
     } else {
-      final path = recorder.end();
-
+      var path = await recorder.end();
+      final mp3 = await wavToMp3(path);
+      print(mp3);
       // TODO: Return the translated output on finish.
     }
+  }
+
+  Future<String> wavToMp3 (String? path) async {
+
+    final directory = await getApplicationCacheDirectory();
+    final dir_path = directory.path;
+
+    String cmd = "-i \"$path\" -vn -ar 16000 -ac 2 -b:a 32k \"$dir_path/input.mp3\"";
+    FFmpegKit.execute(cmd);
+    print(cmd);
+
+    return "$dir_path/input.mp3";
+
   }
 
   @override

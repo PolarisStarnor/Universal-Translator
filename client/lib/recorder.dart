@@ -36,7 +36,6 @@ class Recorder {
     audioRecorder.dispose();
 
     return path;
-
   }
 
 }
