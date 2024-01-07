@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+
+import 'recorder.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -115,20 +119,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  bool recording = false;
+  var recorder = Recorder();
 
-  void _incrementCounter() {
+  Future<void> toggleRecording() async {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+      recording = !recording;
     });
+
+    if (recording) {
+      //Start recording stuff
+      recorder.start();
+    } else {
+      var path = await recorder.end();
+      final mp3 = await wavToMp3(path);
+      print(mp3);
+      // TODO: Return the translated output on finish.
+    }
   }
 
-bool RECORDING = false;
+  Future<String> wavToMp3 (String? path) async {
+
+    final directory = await getApplicationCacheDirectory();
+    final dir_path = directory.path;
+
+    String cmd = "-i \"$path\" -vn -ar 16000 -ac 2 -b:a 32k \"$dir_path/input.mp3\"";
+    FFmpegKit.execute(cmd);
+    print(cmd);
+
+    return "$dir_path/input.mp3";
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +221,7 @@ bool RECORDING = false;
                   }).toList(),
             ),
 
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             DropdownMenu<Languages>(
               initialSelection: Languages.english,
@@ -224,15 +250,12 @@ bool RECORDING = false;
             SizedBox(height: 20),
 
             IconButton(
-              isSelected: RECORDING,
+              isSelected: recording,
               iconSize: 56,
               icon: const Icon(Icons.fiber_manual_record_outlined),
               selectedIcon: const Icon(Icons.stop_circle_outlined),
               onPressed: () {
-                print(RECORDING);
-                setState(() {
-                  RECORDING = !RECORDING;
-                });
+                toggleRecording();
               },
             ),
 
