@@ -4,6 +4,7 @@ import text_cleanup
 import translation
 import pathlib
 import asyncio
+import time
 import re
 from concurrent.futures import ThreadPoolExecutor
 # import text_to_speech
@@ -34,9 +35,12 @@ def connect(conn):
         filename = "audio.mp3"
         with conn, open(filename, 'wb') as mp3:
             while True:
-                data = conn.recv(2048)
-                if not data: break
-                mp3.write(data)
+                try:
+                    data = conn.recv(2048)
+                    if not data: break
+                    mp3.write(data)
+                except:
+                    break
 
         p = re.compile('After:.*?\n')
 
@@ -62,7 +66,10 @@ def connect(conn):
         print(text)
         print("--------- ------------ ---------")
 
-        conn.send(bytes(text))
+
+        conn.sendall(text.encode(encoding='utf-8'))
+
+        time.sleep(2)
 
         conn.close()
 
