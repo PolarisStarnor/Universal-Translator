@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SYSTEM_PROMPT = "You are a minimal text correction engine. You produce no additional output other than specified by the prompt."
+SYSTEM_PROMPT = "You are a minimal text correction engine. Print the following character sequence before and after the modified text: '%%%'"
 
 def clean(text : str) -> str:
     pre_prompt = "You clean up input text. You preserve the semantics of the input, but add nothing, making the input more concise and clear."
