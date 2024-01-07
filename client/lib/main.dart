@@ -105,8 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    inputLanguages? inputLang;
-    outputLanguages? outputLang;
+    Languages? inputLang;
+    Languages? outputLang;
     final TextEditingController inputLanguageController = TextEditingController();
     final TextEditingController outputLanguageController = TextEditingController();
     Icon recordIcon = const Icon(Icons.fiber_manual_record_outlined);
@@ -140,8 +140,8 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            DropdownMenu<inputLanguages>(
-              initialSelection: inputLanguages.english,
+            DropdownMenu<Languages>(
+              initialSelection: Languages.english,
               controller: inputLanguageController,
               // requestFocusOnTap is enabled/disabled by platforms when it is null.
               // On mobile platforms, this is false by default. Setting this to true will
@@ -149,15 +149,15 @@ class _MyHomePageState extends State<MyHomePage> {
               // afterward. On desktop platforms however, this defaults to true.
               requestFocusOnTap: true,
               label: const Text('Input Language'),
-              onSelected: (inputLanguages? lang) {
+              onSelected: (Languages? lang) {
                 setState(() {
                   inputLang = lang;
                 });
               },
-              dropdownMenuEntries: inputLanguages.values
-                  .map<DropdownMenuEntry<inputLanguages>>(
-                      (inputLanguages lang) {
-                    return DropdownMenuEntry<inputLanguages>(
+              dropdownMenuEntries: Languages.values
+                  .map<DropdownMenuEntry<Languages>>(
+                      (Languages lang) {
+                    return DropdownMenuEntry<Languages>(
                       label: lang.label,
                       value: lang,
                     );
@@ -166,8 +166,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
             const SizedBox(height: 30),
 
-            DropdownMenu<outputLanguages>(
-              initialSelection: outputLanguages.english,
+            DropdownMenu<Languages>(
+              initialSelection: Languages.english,
               controller: outputLanguageController,
               // requestFocusOnTap is enabled/disabled by platforms when it is null.
               // On mobile platforms, this is false by default. Setting this to true will
@@ -175,15 +175,15 @@ class _MyHomePageState extends State<MyHomePage> {
               // afterward. On desktop platforms however, this defaults to true.
               requestFocusOnTap: true,
               label: const Text('Output Language'),
-              onSelected: (outputLanguages? lang) {
+              onSelected: (Languages? lang) {
                 setState(() {
                   outputLang = lang;
                 });
               },
-              dropdownMenuEntries: outputLanguages.values
-                  .map<DropdownMenuEntry<outputLanguages>>(
-                      (outputLanguages lang) {
-                    return DropdownMenuEntry<outputLanguages>(
+              dropdownMenuEntries: Languages.values
+                  .map<DropdownMenuEntry<Languages>>(
+                      (Languages lang) {
+                    return DropdownMenuEntry<Languages>(
                       label: lang.label,
                       value: lang,
                     );
