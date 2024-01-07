@@ -40,9 +40,12 @@ def connect(conn):
 
         filepath = pathlib.Path(filename)
         text = speech_to_text.transcribe(filepath)
+        print(text)
 
         text = text_cleanup.eliminate_repetitions(text)
+        print(text)
         text = text_cleanup.clean(text)
+        print(text)
         # text = text_cleanup.rephrase(text)
 
         cleanup(filepath)
