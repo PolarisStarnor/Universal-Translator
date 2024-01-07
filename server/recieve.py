@@ -26,7 +26,6 @@ def server_program():
         conn.close()
         exit()
 
-    conn.close()
 
 def connect(conn):
     while True:
@@ -49,7 +48,7 @@ def connect(conn):
 
         print(text)
 
-        conn.detach()
+        conn.close()
 
         # conn.send(text.encode())
 
